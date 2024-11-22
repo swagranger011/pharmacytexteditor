@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Pharmacy SIG Code Text Converter</title>
+    <meta charset="utf-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" media="screen">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <section class="sec">
+        <header>
+            <h1>Pharmacy SIG Code Text Converter</h1>
+            <nav>
+                <ul>
+                    <li><a href="texteditor.html">Text Editor</a></li>
+                    <li><a href="sigcodes.html">Sig Codes</a></li>
+                    
+                </ul>
+            </nav>
+        </header>
+    </section>
+    <div class="content">
+        <main>
+            <p>Hello there! Have a SIG code and don't know what it means. No worries! Just enter your
+                SIG code here and it will translate it into proper instructions.
+            </p>
+            <p>Enter SIG Here:</p>
+            <textarea rows="10" cols="75" id="textfield" placeholder="Type SIG Here!"></textarea>
+            <button id="textbutton" onclick="translate()">Submit</button>
+            <p>SIG Code:</p>
+            <p id="sig"></p>
+            <button id = "clear" onclick="clear()">Clear</button>
+        </main>
+    </div>
+    <script src="script.js"> </script>
+</body>
+
+
+</html>
