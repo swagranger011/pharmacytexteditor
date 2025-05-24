@@ -12,13 +12,31 @@ app.use(cors());
 // Serve static files from client directory
 app.use(express.static(path.join(__dirname, 'client')));
 
-// Create a connection to the MySQL database
-const db = mysql.createConnection({
-    host: "localhost", // Database host
-    user: "root",      // Database username
-    password: "123456", // Database password
-    database: "pharmabase" // Name of the database
-});
+const corsOptions = { //For communicating with frontend
+    origin: ["http://localhost:5174"],
+};
+
+app.use(cors(corsOptions)); // Enable CORS for the specified origin
+
+async function connectDB() {
+  try {
+    const connection = await mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: '123456',
+      database: 'Sigcodes',
+      port: 3306 //1434
+    });
+    console.log('Connected to database!');
+    return connection;
+  } catch (err) {
+    console.error('Database connection failed:', err);
+    process.exit(1);
+  }
+}
+
+// Use the connection
+connectDB();
 
 // Define a route for the root URL '/'
 app.get('/', (req, res) => {
