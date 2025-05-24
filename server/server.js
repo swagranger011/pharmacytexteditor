@@ -3,10 +3,14 @@
 const express = require('express'); // Express framework for handling HTTP requests
 const mysql = require('mysql2'); // MySQL2 client for Node.js
 const cors = require('cors'); // For web security
+const path = require('path');
 
 // Create an instance of express
 const app = express();
 app.use(cors());
+
+// Serve static files from client directory
+app.use(express.static(path.join(__dirname, 'client')));
 
 // Create a connection to the MySQL database
 const db = mysql.createConnection({
@@ -21,6 +25,12 @@ app.get('/', (req, res) => {
     // Respond with a JSON message
     return res.json("From backend side");
 });
+
+// API routes
+app.get('/api/data', (req, res) => {
+  res.json({ message: 'Server data' });
+});
+
 
 // Define a route to fetch all codes from the 'codes' table
 app.get('/codes', (req, res) => {
