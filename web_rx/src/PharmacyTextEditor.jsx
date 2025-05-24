@@ -4,3 +4,7 @@ import { Link } from "react-router-dom";
 const PharmacyTextEditor = () => {
   return (
     <div>
+    </div>
+  );
+};
+export default PharmacyTextEditor;

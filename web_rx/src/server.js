@@ -22,9 +22,9 @@ app.get('/', (req, res) => {
     return res.json("From backend side");
 });
 
-// Define a route to fetch all items from the 'items' table
-app.get('/items', (req, res) => {
-    const sql = "select * from items"; // SQL query to select all items
+// Define a route to fetch all codes from the 'codes' table
+app.get('/codes', (req, res) => {
+    const sql = "select * from codes"; // SQL query to select all codes
     db.query(sql, (err, data) => { // Execute the SQL query
         if (err) return res.json(err); // If there's an error, return the error
         return res.json(data); // Otherwise, return the data as JSON
