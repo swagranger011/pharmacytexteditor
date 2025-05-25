@@ -1,65 +1,54 @@
-// server.js
-// Import required modules
-const express = require('express'); // Express framework for handling HTTP requests
-const mysql = require('mysql2'); // MySQL2 client for Node.js
-const cors = require('cors'); // For web security
+const express = require('express');
+const sql = require('mssql'); // Fixed variable name
+const cors = require('cors');
 const path = require('path');
 
-// Create an instance of express
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:5173"] // Match your frontend port
+}));
+app.use(express.json());
 
-// Serve static files from client directory
-app.use(express.static(path.join(__dirname, 'client')));
+// Connection pool
+let pool;
 
-const corsOptions = { //For communicating with frontend
-    origin: ["http://localhost:5174"],
-};
-
-app.use(cors(corsOptions)); // Enable CORS for the specified origin
-
-async function connectDB() {
+async function initDB() {
   try {
-    const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '123456',
+    pool = new sql.ConnectionPool({
+      server: 'localhost',
+      user: 'SA',
+      password: '1234S@bc',
       database: 'Sigcodes',
-      port: 3306 //1434
+      options: {
+        encrypt: true,
+        trustServerCertificate: true
+      }
     });
-    console.log('Connected to database!');
-    return connection;
+    
+    await pool.connect();
+    console.log('MSSQL Connected!');
   } catch (err) {
-    console.error('Database connection failed:', err);
+    console.error('Connection failed:', err);
     process.exit(1);
   }
 }
 
-// Use the connection
-connectDB();
+// Initialize DB connection
+initDB();
 
-// Define a route for the root URL '/'
-app.get('/', (req, res) => {
-    // Respond with a JSON message
-    return res.json("From backend side");
+// Routes
+app.get('/codes', async (req, res) => {
+  try {
+    const result = await pool.request().query("SELECT * FROM codes");
+    res.json(result.recordset);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
-// API routes
-app.get('/api/data', (req, res) => {
-  res.json({ message: 'Server data' });
-});
+// Serve static files
+app.use(express.static(path.join(__dirname, 'client')));
 
-
-// Define a route to fetch all codes from the 'codes' table
-app.get('/codes', (req, res) => {
-    const sql = "select * from codes"; // SQL query to select all codes
-    db.query(sql, (err, data) => { // Execute the SQL query
-        if (err) return res.json(err); // If there's an error, return the error
-        return res.json(data); // Otherwise, return the data as JSON
-    })
-});
-
-// Start the server and listen on port 8081
 app.listen(8081, () => {
-    console.log("listening");
+  console.log("Server running on port 8081");
 });

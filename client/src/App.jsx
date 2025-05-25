@@ -1,8 +1,4 @@
-// File: src/App.jsx
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import React, { useEffect } from "react"; // Added useEffect
-import logo from "./logo.svg";
-import "./App.css";
+import React, { useEffect, useState } from "react";
 
 function App() {
   const [data, setData] = useState([]);
@@ -12,24 +8,31 @@ function App() {
     const fetchData = async () => {
       try {
         const response = await fetch("http://localhost:8081/codes");
-        const data = await response.json();
-        console.log(data);
+        if (!response.ok) throw new Error('HTTP error');
+        const result = await response.json();
+        setData(result);
       } catch (error) {
-        console.error(error);
+        console.error("Fetch error:", error);
       } finally {
-        console.log("Fetch attempt completed");
+        setLoading(false);
       }
     };
-    if (loading) return <div>Loading...</div>;
+    
+    fetchData();
   }, []);
+
   return (
     <div>
-      {data.map((codes) => (
-        <div key={codes.codeid}>
-          <p>{codes.SigCode}</p>
-          <p>{codes.translation}</p>
-        </div>
-      ))}
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        data.map(codes => (
+          <div key={codes.codeid}>
+            <p>{codes.SigCode}</p>
+            <p>{codes.translation}</p>
+          </div>
+        ))
+      )}
     </div>
   );
 }
