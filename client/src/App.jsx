@@ -1,4 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Dashboard from "./Dashboard";
+import PharmacyTextEditor from "./PharmacyTextEditor";
+
+import './App.css';
 
 function App() {
   const [data, setData] = useState([]);
@@ -33,6 +38,13 @@ function App() {
           </div>
         ))
       )}
+
+      <Router>
+        <Routes>
+          <Route path ="/" element={<Dashboard />} />
+          <Route path="/pharmacy-text-editor" element={<PharmacyTextEditor />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
