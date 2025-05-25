@@ -8,18 +8,20 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
         <header className="dashboard-header">
-            <h1>Dashboard</h1>
+            <h1>WebRX</h1>
             <Mode />
         </header>
         <nav className="dashboard-nav">
             <ul>
-            <li><Link to="/pharmacy-text-editor">Pharmacy Text Editor</Link></li>
-            <li><Link to="/codes">Codes</Link></li>
-            <li><Link to="/settings">Settings</Link></li>
+            <li><Link to="/pharmacy-text-editor">Sig Code Translator</Link></li>
+            <li><Link to="/interaction-checker">Interation Checker</Link></li>
+            <li><Link to="/drug-information">Drug Information</Link></li>
+            <li><Link to="/Scheduler">Scheduler</Link></li>
             </ul>
         </nav>
         <main className="dashboard-main">
             <p>Welcome to the Dashboard! Use the links above to navigate.</p>
+            
         </main>
     </div>
   );

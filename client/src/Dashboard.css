@@ -5,3 +5,12 @@ div {
     border-radius: 8px;
     margin: auto;
 }
+
+/* For larger screens or different layouts, 
+   you can use media queries to change the number of columns: */
+
+@media (min-width: 600px) {
+    .items-box {
+        grid-template-columns: repeat(2, 1fr); /* 2x2 layout when viewport >= 600px */
+    }
+}
