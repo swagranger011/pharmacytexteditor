@@ -37,7 +37,20 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    color: #fff;
+    color: #050505;
+}
+
+[data-theme="dark"] nav ul li a:hover {
+    color: #ffffff;
+}
+
+[data-theme="dark"] h2 {
+    color: #ffffff;
+}
+
+[data-theme="dark"] body {
+    background-color: #050505;
+    color: #ffffff;
 }
 
 section {
@@ -93,4 +106,9 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
   margin: 4px;
+}
+
+[data-theme="light"] button {
+  color: #ffffff;
+  background-color: #e64833;
 }

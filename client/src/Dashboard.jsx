@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Dashboard.css';
 import './Mode.css';
+import drugs from "./photos/drugs.jpg";
 import Mode from './Mode';
 
 const Dashboard = () => {
@@ -20,8 +21,8 @@ const Dashboard = () => {
             </ul>
         </nav>
         <main className="dashboard-main">
-            <p>Welcome to the Dashboard! Use the links above to navigate.</p>
-            
+            <img src={drugs} alt="Pharmacy" className="dashboard-image" style={{width: "1200px", height: "auto"}} />
+            <h2>Welcome to WebRX! A pharmacy website filled with helpful tools!</h2>
         </main>
     </div>
   );
