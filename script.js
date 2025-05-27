@@ -16,7 +16,7 @@ function translate() {
         output += "Take 2 tablets ";
     }
     if (text.includes("3t")) {
-        output += "Take 1 tablet ";
+        output += "Take 3 tablet ";
     }
     if (text.includes("1c")) {
         output += "Take 1 capsule ";

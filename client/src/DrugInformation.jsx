@@ -12,6 +12,7 @@ const DrugInformation = () => {
             </header>
             <nav className="dashboard-nav">
                 <ul>
+                    <li><Link to="/dashboard">Dashboard</Link></li>
                     <li><Link to="/pharmacy-text-editor">Sig Code Translator</Link></li>
                     <li><Link to="/interaction-checker">Interaction Checker</Link></li>
                     <li><Link to="/drug-information">Drug Information</Link></li>
