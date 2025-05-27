@@ -42,10 +42,7 @@ initDB();
 // Routes
 app.get("/codes", async (req, res) => {
   try {
-    const result = await pool
-      .request()
-      .input("inputCode", sql.VarChar, code)
-      .query("SELECT * FROM Codes");
+    const result = await pool.request().query("SELECT * FROM Codes");
     res.json(result.recordset);
   } catch (err) {
     res.status(500).json(err);
@@ -59,22 +56,38 @@ app.listen(8081, () => {
   console.log("Server running on port 8081");
 });
 
-app.post("/api/translate", express.json(), async (req, res) => {
+app.post('/api/translate', express.json(), async (req, res) => {
   try {
     const { code } = req.body;
-
-    const pool = await sql.connect(config);
-    const result = await pool
-      .request()
-      .input("inputCode", sql.VarChar, code)
-      .query("SELECT Translation FROM Codes WHERE SigCode = @inputCode");
-
-    if (result.recordset.length === 0) {
-      return res.status(404).json({ error: "Code not found" });
+    
+    if (!code || typeof code !== 'string' || code.length > 50) {
+      return res.status(400).json({ error: "Invalid input format" });
     }
 
-    res.json({ translation: result.recordset[0].translation });
+    const result = await pool.request()
+      .input('inputCode', sql.VarChar, code.toUpperCase()) // Case-insensitive search
+      .query('SELECT Translation FROM dbo.Codes WHERE SigCode = @inputCode');
+
+    // Handle empty results
+    if (!result.recordset.length) {
+      return res.status(404).json({ error: "No translation found for: " + code });
+    }
+
+    res.json({ 
+      translation: result.recordset[0].translation,
+      original: code
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Database error: " + err.message });
   }
 });
+
+async function testQuery() {
+  try {
+    const result = await pool.request().query("SELECT * FROM Codes");
+    console.log("Test Query Result:", result.recordset);
+  } catch (err) {
+    console.error("Test Query Failed:", err);
+  }
+}
+testQuery();

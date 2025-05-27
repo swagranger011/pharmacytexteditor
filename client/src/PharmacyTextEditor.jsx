@@ -10,27 +10,34 @@ const PharmacyTextEditor = () => {
   const [loading, setLoading] = useState(false);
 
   const fetchData = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const response = await fetch("http://localhost:8081/api/translate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ code: inputText }),
-      });
-      
-      if (!response.ok) throw new Error("Translation not found");
-      const result = await response.json();
-      setTranslation(result.translation);
-      setError(null);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
+  e.preventDefault();
+  setLoading(true);
+  try {
+    if (!inputText.trim()) {
+      throw new Error("Please enter a SIG code");
     }
-  };
+
+    const response = await fetch("http://localhost:8081/api/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code: inputText.trim() }),
+    });
+
+    const data = await response.json();
+    
+    if (data.error) throw new Error(data.error);
+    if (!data.translation) throw new Error("Translation format error");
+
+    setTranslation(data.translation);
+    setError(null);
+  } catch (error) {
+    setError(error.message.includes("fetch")
+      ? "Connection to server failed"
+      : error.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div>
