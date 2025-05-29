@@ -12,7 +12,7 @@ function App() {
   return (
       <Router>
         <Routes>
-          <Route path ="/" element={<Dashboard />} />
+          <Route path ="/dashboard" element={<Dashboard />} />
           <Route path="/pharmacy-text-editor" element={<PharmacyTextEditor />} />
           <Route path="/interaction-checker" element={<InteractionChecker/>} />
           <Route path="/drug-information" element={<DrugInformation />} />
