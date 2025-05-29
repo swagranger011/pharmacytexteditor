@@ -5,7 +5,7 @@ import Mode from "./Mode";
 
 const PharmacyTextEditor = () => {
   const [inputText, setInputText] = useState("");
-  const [translation, setTranslation] = useState("");
+  const [translation, setTranslation] = useState([]); // Change to array
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -17,23 +17,26 @@ const PharmacyTextEditor = () => {
       throw new Error("Please enter a SIG code");
     }
 
-    const response = await fetch("http://localhost:8081/api/translate", {
+    const response = await fetch("http://localhost:8081/Codes", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code: inputText.trim() }),
     });
 
     const data = await response.json();
-    
-    if (data.error) throw new Error(data.error);
-    if (!data.translation) throw new Error("Translation format error");
 
-    setTranslation(data.translation);
+    if (data.error) throw new Error(data.error);
+    if (!data.translations || !Array.isArray(data.translations)) {
+      throw new Error("Translation format error");
+    }
+
+    setTranslation(data.translations);
     setError(null);
   } catch (error) {
     setError(error.message.includes("fetch")
       ? "Connection to server failed"
       : error.message);
+    setTranslation([]);
   } finally {
     setLoading(false);
   }
@@ -71,8 +74,10 @@ const PharmacyTextEditor = () => {
           instructions.
         </p>
         <form onSubmit={fetchData}>
-          <input
-            type="text"
+          <textarea
+            className="input-textarea"
+            rows={3}
+            style={{ width: "100%" }}
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder="Enter Sig code here!"
@@ -83,10 +88,16 @@ const PharmacyTextEditor = () => {
         </form>
 
         {error && <p className="error">{error}</p>}
-        {translation && (
+        {translation.length > 0 && (
           <div className="result">
             <h3>Translation:</h3>
-            <p>{translation}</p>
+            <ul>
+              {translation.map((item, index) => (
+                <li key={index}>
+                  <strong>{item.code}:</strong> {item.translation || "Not found"}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
       </main>

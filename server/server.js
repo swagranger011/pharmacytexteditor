@@ -1,93 +1,129 @@
-const express = require("express");
-const sql = require("mssql"); // Fixed variable name
-const cors = require("cors");
-const path = require("path");
+const express = require('express');
+const sql = require('mssql');
+const cors = require('cors');
+const path = require('path');
 
 const app = express();
-app.use(
-  cors({
-    origin: ["http://localhost:5173"], // Match your frontend port
-  })
-);
+app.use(cors({
+  origin: ["http://localhost:5173"]
+}));
 app.use(express.json());
 
-// Connection pool
-let pool;
+// Connection pool setup
+const pool = new sql.ConnectionPool({
+  server: 'localhost',
+  user: 'SA',
+  password: '1234S@bc',
+  database: 'master',
+  options: {
+    encrypt: true,
+    trustServerCertificate: true
+  }
+});
 
-//You can use this command to log into the database:  sqlcmd -S localhost -U SA -P '1234S@bc'
-async function initDB() {
+// Connect to database and start server
+async function startServer() {
   try {
-    pool = new sql.ConnectionPool({
-      server: "localhost",
-      user: "SA",
-      password: "1234S@bc",
-      database: "Sigcodes",
-      options: {
-        encrypt: true,
-        trustServerCertificate: true,
-      },
-    });
-
+    // 1. Connect to database
     await pool.connect();
-    console.log("MSSQL Connected!");
+    console.log('MSSQL Connected!');
+
+    const dbCheck = await pool.request().query("SELECT DB_NAME() AS CurrentDB");
+    console.log("Using database:", dbCheck.recordset[0].CurrentDB);
+    
+    // 2. Verify connection with test query
+    try {
+      const result = await pool.request().query("SELECT * FROM dbo.Codes");
+      console.log("Test Query Successful:", result.recordset.length, "records found");
+    } catch (testErr) {
+      console.error("Test Query Failed:", testErr);
+    }
+
+    // 3. Start server AFTER database connection
+    app.listen(8081, () => {
+      console.log("Server running on port 8081");
+    });
   } catch (err) {
-    console.error("Connection failed:", err);
+    console.error('Database connection failed:', err);
     process.exit(1);
   }
 }
 
-// Initialize DB connection
-initDB();
-
 // Routes
-app.get("/codes", async (req, res) => {
+app.get('/codes', async (req, res) => {
   try {
-    const result = await pool.request().query("SELECT * FROM Codes");
+    // Verify pool is connected
+    if (!pool.connected) {
+      return res.status(500).json({ error: "Database not connected" });
+    }
+    
+    const result = await pool.request().query("SELECT * FROM dbo.Codes");
     res.json(result.recordset);
   } catch (err) {
-    res.status(500).json(err);
+    console.error("Route error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/Codes", express.json(), async (req, res) => {
+  try {
+    const { code } = req.body;
+
+    if (!pool.connected) {
+      return res.status(500).json({ error: "Database not connected" });
+    }
+
+    // Split input by semicolon or whitespace, trim, and filter out empty strings
+    const codes = code
+      .split(/[;\s]+/)
+      .map(c => c.trim().toUpperCase()) // Convert to uppercase
+      .filter(Boolean);
+
+    if (codes.length === 0) {
+      return res.status(400).json({ error: "No valid codes provided" });
+    }
+
+    // Build parameterized query for all codes
+    const request = pool.request();
+    const params = codes.map((c, i) => {
+      const paramName = `code${i}`;
+      request.input(paramName, sql.VarChar, c);
+      return `@${paramName}`;
+    });
+
+    const query = `
+      SELECT SigCode, Translation
+      FROM dbo.Codes
+      WHERE SigCode IN (${params.join(",")})
+    `;
+
+    const result = await request.query(query);
+
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ error: "No codes found" });
+    }
+
+    // Map found codes to translations
+    const translations = {};
+    result.recordset.forEach(row => {
+      translations[row.SigCode] = row.Translation;
+    });
+
+    // Build response for all input codes (including not found)
+    const response = codes.map(c => ({
+      code: c,
+      translation: translations[c] || null
+    }));
+
+    res.json({ translations: response });
+  } catch (err) {
+    console.error("Translation error:", err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
 // Serve static files
-app.use(express.static(path.join(__dirname, "client")));
+app.use(express.static(path.join(__dirname, 'client')));
 
-app.listen(8081, () => {
-  console.log("Server running on port 8081");
-});
-
-app.post('/api/translate', express.json(), async (req, res) => {
-  try {
-    const { code } = req.body;
-    
-    if (!code || typeof code !== 'string' || code.length > 50) {
-      return res.status(400).json({ error: "Invalid input format" });
-    }
-
-    const result = await pool.request()
-      .input('inputCode', sql.VarChar, code.toUpperCase()) // Case-insensitive search
-      .query('SELECT Translation FROM dbo.Codes WHERE SigCode = @inputCode');
-
-    // Handle empty results
-    if (!result.recordset.length) {
-      return res.status(404).json({ error: "No translation found for: " + code });
-    }
-
-    res.json({ 
-      translation: result.recordset[0].translation,
-      original: code
-    });
-  } catch (err) {
-    res.status(500).json({ error: "Database error: " + err.message });
-  }
-});
-
-async function testQuery() {
-  try {
-    const result = await pool.request().query("SELECT * FROM Codes");
-    console.log("Test Query Result:", result.recordset);
-  } catch (err) {
-    console.error("Test Query Failed:", err);
-  }
-}
-testQuery();
+// Start everything
+startServer();
