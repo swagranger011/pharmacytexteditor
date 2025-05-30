@@ -4,7 +4,9 @@ import Mode from './Mode';
 import './Mode.css';
 
 const InteractionChecker = () => {
-  const [drugs, setDrugs] = useState(['', '']); // Start with two inputs
+  const [drugs, setDrugs] = useState(['', '']);
+  const [interactions, setInteractions] = useState([]);
+  const [error, setError] = useState(null);
 
   const handleDrugChange = (index, value) => {
     const newDrugs = [...drugs];
@@ -14,6 +16,23 @@ const InteractionChecker = () => {
 
   const addDrugInput = () => {
     setDrugs([...drugs, '']);
+  };
+
+  const checkInteractions = async () => {
+    setError(null);
+    setInteractions([]);
+    try {
+      const response = await fetch("http://localhost:8081/api/check-interactions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ drugs: drugs.filter(d => d.trim()) }),
+      });
+      const data = await response.json();
+      if (data.error) throw new Error(data.error);
+      setInteractions(data.interactions);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -47,14 +66,28 @@ const InteractionChecker = () => {
         <button
           id="check-button"
           style={{ marginLeft: '10px' }}
-          onClick={() => alert('Check interactions functionality not implemented yet.')}
+          type="button"
+          onClick={checkInteractions}
         >
           Check Interactions
         </button>
+        {error && <p className="error">{error}</p>}
+        {interactions.length > 0 && (
+          <div>
+            <h3>Interactions:</h3>
+            <ul>
+              {interactions.map((item, idx) => (
+                <li key={idx}>
+                  <strong>{item.DrugA} + {item.DrugB}</strong>: {item.Severity} - {item.Description}
+                  {item.Management && <div><em>Management:</em> {item.Management}</div>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </main>
     </div>
   );
 };
 
 export default InteractionChecker;
-// This component is a placeholder for the interaction checker functionality.

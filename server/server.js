@@ -76,7 +76,7 @@ app.post("/Codes", express.json(), async (req, res) => {
     // Split input by semicolon or whitespace, trim, and filter out empty strings
     const codes = code
       .split(/[;\s]+/)
-      .map(c => c.trim().toUpperCase()) // Convert to uppercase
+      .map(c => c.trim())
       .filter(Boolean);
 
     if (codes.length === 0) {
@@ -118,6 +118,43 @@ app.post("/Codes", express.json(), async (req, res) => {
     res.json({ translations: response });
   } catch (err) {
     console.error("Translation error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.post("/api/check-interactions", express.json(), async (req, res) => {
+  const { drugs } = req.body;
+  if (!Array.isArray(drugs) || drugs.length < 2) {
+    return res.status(400).json({ error: "Provide at least two drugs." });
+  }
+
+  try {
+    // Build dynamic SQL for all pairs
+    let conditions = [];
+    let request = pool.request();
+    let paramIdx = 0;
+    for (let i = 0; i < drugs.length; i++) {
+      for (let j = i + 1; j < drugs.length; j++) {
+        const a = `drugA${paramIdx}`;
+        const b = `drugB${paramIdx}`;
+        request.input(a, sql.NVarChar, drugs[i]);
+        request.input(b, sql.NVarChar, drugs[j]);
+        conditions.push(`((da.Name = @${a} AND db.Name = @${b}) OR (da.Name = @${b} AND db.Name = @${a}))`);
+        paramIdx++;
+      }
+    }
+    const whereClause = conditions.join(" OR ");
+    const query = `
+      SELECT da.Name AS DrugA, db.Name AS DrugB, di.Severity, di.Description, di.Management
+      FROM DrugInteractions di
+      JOIN Drugs da ON di.Drug1ID = da.DrugID
+      JOIN Drugs db ON di.Drug2ID = db.DrugID
+      WHERE ${whereClause}
+    `;
+    const result = await request.query(query);
+    res.json({ interactions: result.recordset });
+  } catch (err) {
+    console.error("Interaction check error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });

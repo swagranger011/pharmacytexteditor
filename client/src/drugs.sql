@@ -38,7 +38,29 @@ INSERT INTO Drugs (Name, GenericName, DrugClass) VALUES
 ('Warfarin', 'Warfarin Sodium', 'Anticoagulant'),
 ('Aspirin', 'Acetylsalicylic Acid', 'NSAID'),
 ('Ciprofloxacin', 'Ciprofloxacin', 'Antibiotic'),
+('Atorvastatin', 'Atorvastatin', 'Statin'),
+('Rosuvastatin', 'Rosuvastatin', 'Statin'),
+('Citalopram', 'Citalopram', 'Antidepressant'),
+('Metformin', 'Metformin', 'Antidiabetic'),
+('Lisinopril', 'Lisinopril', 'ACE Inhibitor'),
+('Omeprazole', 'Omeprazole', 'Proton Pump Inhibitor'),
+('Levothyroxine', 'Levothyroxine Sodium', 'Thyroid Hormone'),
+('Metoprolol', 'Metoprolol Tartrate', 'Beta Blocker'),
+('Amlodipine', 'Amlodipine Besylate', 'Calcium Channel Blocker'),
+('Simvastatin', 'Simvastatin', 'Statin'),
+('Clopidogrel', 'Clopidogrel Bisulfate', 'Antiplatelet'),
+('Gabapentin', 'Gabapentin', 'Anticonvulsant'),
+('Hydrochlorothiazide', 'Hydrochlorothiazide', 'Diuretic'),
+('Furosemide', 'Furosemide', 'Loop Diuretic'),
+('Albuterol', 'Albuterol Sulfate', 'Bronchodilator'),
+('Prednisone', 'Prednisone', 'Corticosteroid'),
+('Zoloft', 'Sertraline Hydrochloride', 'Antidepressant'),
+('Fluoxetine', 'Fluoxetine Hydrochloride', 'Antidepressant'),
+('Duloxetine', 'Duloxetine Hydrochloride', 'Antidepressant'),
+('Ranitidine', 'Ranitidine Hydrochloride', 'H2 Antagonist'),
+('Montelukast', 'Montelukast Sodium', 'Leukotriene Receptor Antagonist'),
 ('Simvastatin', 'Simvastatin', 'Statin');
+
 
 -- Insert Interactions
 INSERT INTO DrugInteractions (Drug1ID, Drug2ID, Severity, Description, Mechanism, Management) VALUES
