@@ -129,7 +129,6 @@ app.post("/api/check-interactions", express.json(), async (req, res) => {
   }
 
   try {
-    // Build dynamic SQL for all pairs
     let conditions = [];
     let request = pool.request();
     let paramIdx = 0;
