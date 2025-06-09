@@ -22,7 +22,7 @@ const DrugInformation = () => {
             <main className="dashboard-main">
                 <h2>Drug Information</h2>
                 <p>Enter the name of the drug you want information about:</p>
-                <textarea rows="10" cols="75" id="drug-input" placeholder="Type drug name here!"></textarea>
+                <input rows="10" cols="75" id="drug-input" placeholder="Type drug name here!"></input>
                 <button id="info-button" onClick={() => alert('Drug information functionality not implemented yet.')}>Get Drug Information</button>
             </main>
         </div>
