@@ -6,6 +6,7 @@ import InteractionChecker from "./InteractionChecker";
 import DrugInformation from "./DrugInformation";
 import Scheduler from "./Scheduler";
 import Mode from "./Mode";
+import Login from "./Login";
 
 import './App.css';
 
@@ -19,6 +20,7 @@ function App(){
           <Route path="/drug-information" element={<DrugInformation />} />
           <Route path="/scheduler" element={<Scheduler />} />
           <Route path="/mode" element={<Mode />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </Router>
   );

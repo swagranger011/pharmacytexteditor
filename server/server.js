@@ -158,6 +158,27 @@ app.post("/api/check-interactions", express.json(), async (req, res) => {
   }
 });
 
+app.get("/api/drug-info", async (req, res) => {
+  const name = req.query.name;
+  if (!name) {
+    return res.status(400).json({ error: "No drug name provided" });
+  }
+  try {
+    const request = pool.request();
+    request.input("name", sql.NVarChar, name);
+    const result = await request.query(
+      "SELECT * FROM Drugs WHERE Name = @name"
+    );
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ error: "Drug not found" });
+    }
+    res.json(result.recordset[0]);
+  } catch (err) {
+    console.error("Drug info error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 // Serve static files
 app.use(express.static(path.join(__dirname, 'client')));
 

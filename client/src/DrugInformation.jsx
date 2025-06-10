@@ -1,9 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Mode from './Mode';
 import './Mode.css';
 
 const DrugInformation = () => {
+    const [input, setInput] = useState('');
+    const [info, setInfo] = useState(null);
+    const [error, setError] = useState(null);
+
+    const getDrugInfo = async () => {
+        setError(null);
+        setInfo(null);
+        try {
+            const response = await fetch(`http://localhost:8081/api/drug-info?name=${encodeURIComponent(input)}`);
+            const data = await response.json();
+            if (data.error) throw new Error(data.error);
+            setInfo(data);
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
     return (
         <div>
             <header className="dashboard-header">
@@ -22,11 +39,23 @@ const DrugInformation = () => {
             <main className="dashboard-main">
                 <h2>Drug Information</h2>
                 <p>Enter the name of the drug you want information about:</p>
-                <input rows="10" cols="75" id="drug-input" placeholder="Type drug name here!"></input>
-                <button id="info-button" onClick={() => alert('Drug information functionality not implemented yet.')}>Get Drug Information</button>
+                <input
+                    id="drug-input"
+                    placeholder="Type drug name here!"
+                    value={input}
+                    onChange={e => setInput(e.target.value)}
+                />
+                <button id="info-button" onClick={getDrugInfo}>Get Drug Information</button>
+                {error && <p className="error">{error}</p>}
+                {info && (
+                    <div className="result">
+                        <h3>{info.Name}</h3>
+                        <p><strong>Generic Name:</strong> {info.GenericName}</p>
+                        <p><strong>Drug Class:</strong> {info.DrugClass}</p>
+                    </div>
+                )}
             </main>
         </div>
     );
-}
+};
 export default DrugInformation;
-// This component is a placeholder for the drug information functionality.

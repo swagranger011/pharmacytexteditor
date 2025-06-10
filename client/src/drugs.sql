@@ -33,5 +33,9 @@ INSERT INTO Drugs (Name, GenericName, DrugClass) VALUES
 ('Insulin Lispro', 'Insulin Lispro', 'Rapid-Acting Insulin'),
 ('Klonopin', 'Clonazepam', 'Benzodiazepine'),
 ('Ativan', 'Lorazepam', 'Benzodiazepine'),
-('Valium', 'Diazepam', 'Benzodiazepine');
-
+('Valium', 'Diazepam', 'Benzodiazepine'),
+('Xanax', 'Alprazolam', 'Benzodiazepine'),
+('Oxycodone', 'Oxycodone Hydrochloride', 'Opioid Analgesic'),
+('Norco', 'Hydrocodone-Acetaminophen', 'Opioid Analgesic'),
+('Tramadol', 'Tramadol Hydrochloride', 'Opioid Analgesic'),
+('Lyrica', 'Pregabalin', 'Anticonvulsant');
