@@ -14,7 +14,7 @@ const Dashboard = () => {
         </header>
         <nav className="dashboard-nav">
             <ul>
-            <li><Link to="/dashboard">Dashboard</Link></li>
+            <li><Link to="/">Dashboard</Link></li>
             <li><Link to="/pharmacy-text-editor">Sig Code Translator</Link></li>
             <li><Link to="/interaction-checker">Interaction Checker</Link></li>
             <li><Link to="/drug-information">Drug Information</Link></li>
@@ -25,6 +25,14 @@ const Dashboard = () => {
             <img src={drugs} alt="Pharmacy" className="dashboard-image" style={{width: "1200px", height: "auto"}} />
             <h2>Welcome to WebRX! A pharmacy website filled with helpful tools!</h2>
         </main>
+        <Link to="/login" className="dashboard-login-link">
+            <button className="login-button">
+              <span className='btn-txt'>Login</span>
+            </button>
+        </Link>
+        <footer className="dashboard-footer">
+            <p>&copy; 2023 WebRX. All rights reserved.</p>
+        </footer>
     </div>
   );
 };
