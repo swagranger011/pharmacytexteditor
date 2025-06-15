@@ -10,37 +10,39 @@ const PharmacyTextEditor = () => {
   const [loading, setLoading] = useState(false);
 
   const fetchData = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  try {
-    if (!inputText.trim()) {
-      throw new Error("Please enter a SIG code");
+    e.preventDefault();
+    setLoading(true);
+    try {
+      if (!inputText.trim()) {
+        throw new Error("Please enter a SIG code");
+      }
+
+      const response = await fetch("http://localhost:8081/Codes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: inputText.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (data.error) throw new Error(data.error);
+      if (!data.translations || !Array.isArray(data.translations)) {
+        throw new Error("Translation format error");
+      }
+
+      setTranslation(data.translations);
+      setError(null);
+    } catch (error) {
+      setError(
+        error.message.includes("fetch")
+          ? "Connection to server failed"
+          : error.message
+      );
+      setTranslation([]);
+    } finally {
+      setLoading(false);
     }
-
-    const response = await fetch("http://localhost:8081/Codes", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code: inputText.trim() }),
-    });
-
-    const data = await response.json();
-
-    if (data.error) throw new Error(data.error);
-    if (!data.translations || !Array.isArray(data.translations)) {
-      throw new Error("Translation format error");
-    }
-
-    setTranslation(data.translations);
-    setError(null);
-  } catch (error) {
-    setError(error.message.includes("fetch")
-      ? "Connection to server failed"
-      : error.message);
-    setTranslation([]);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <div>
@@ -64,6 +66,9 @@ const PharmacyTextEditor = () => {
           </li>
           <li>
             <Link to="/scheduler">Scheduler</Link>
+          </li>
+          <li>
+            <Link to="/contacts">Contact Us</Link>
           </li>
         </ul>
       </nav>
@@ -94,13 +99,22 @@ const PharmacyTextEditor = () => {
             <ul>
               {translation.map((item, index) => (
                 <li key={index}>
-                  <strong>{item.code}:</strong> {item.translation || "Not found"}
+                  <strong>{item.code}:</strong>{" "}
+                  {item.translation || "Not found"}
                 </li>
               ))}
             </ul>
           </div>
         )}
       </main>
+      <Link to="/login" className="dashboard-login-link">
+        <button className="login-button">
+          <span className="btn-txt">Login</span>
+        </button>
+      </Link>
+      <footer className="dashboard-footer">
+        <p>&copy; 2023 WebRX. All rights reserved.</p>
+      </footer>
     </div>
   );
 };

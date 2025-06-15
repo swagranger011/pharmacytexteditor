@@ -7,6 +7,7 @@ import DrugInformation from "./DrugInformation";
 import Scheduler from "./Scheduler";
 import Mode from "./Mode";
 import Login from "./Login";
+import Contacts from "./Contacts";
 
 import './App.css';
 
@@ -21,6 +22,7 @@ function App(){
           <Route path="/scheduler" element={<Scheduler />} />
           <Route path="/mode" element={<Mode />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/contacts" element={<Contacts />} />
         </Routes>
       </Router>
   );
