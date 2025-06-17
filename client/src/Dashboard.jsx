@@ -32,7 +32,7 @@ const Dashboard = () => {
             </button>
         </Link>
         <footer className="dashboard-footer">
-            <p>&copy; 2023 WebRX. All rights reserved.</p>
+            <p>&copy; 2025 WebRX. All rights reserved.</p>
         </footer>
     </div>
   );

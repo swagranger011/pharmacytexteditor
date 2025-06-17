@@ -1,0 +1,17 @@
+//Contacts.css
+
+.contact-form {
+  display: inline-flex;
+  flex-flow: column nowrap;
+  background-color: #5c6969;
+  border: 1px solid #1d2228;
+}
+
+input,
+textarea {
+  margin-bottom: 1em;
+}
+
+fieldset {
+  border: 1px solid #fb8122;
+}
