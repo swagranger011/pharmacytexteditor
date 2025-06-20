@@ -72,7 +72,7 @@ const InteractionChecker = () => {
         {drugs.map((drug, idx) => (
           <input
             key={idx}
-            style={{ display: "block", marginBottom: "8px", width: "75%" }}
+            style={{ display: "block", marginBottom: "8px", width: "auto", textAlign: "center" }}
             value={drug}
             onChange={(e) => handleDrugChange(idx, e.target.value)}
             placeholder="Type drug name here!"
@@ -83,7 +83,6 @@ const InteractionChecker = () => {
         </button>
         <button
           id="check-button"
-          style={{ marginLeft: "10px" }}
           type="button"
           onClick={checkInteractions}
         >

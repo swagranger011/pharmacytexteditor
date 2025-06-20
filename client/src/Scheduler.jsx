@@ -1,9 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Mode from "./Mode";
 import "./Mode.css";
 
-const InteractionChecker = () => {
+const Scheduler = () => {
+  const [input, setInput] = useState("");
+  const [schedule, setSchedule] = useState([]);
+  const [error, setError] = useState(null);
+
+  const addDrug = () => {
+    setError(null);
+    if (!input.trim()) {
+      setError("Please enter a drug name.");
+      return;
+    }
+    // For demonstration, just add with a placeholder time
+    setSchedule([...schedule, { name: input.trim(), time: "08:00 AM" }]);
+    setInput("");
+  };
+
   return (
     <div>
       <header className="dashboard-header">
@@ -34,6 +49,34 @@ const InteractionChecker = () => {
       </nav>
       <main className="dashboard-main">
         <h2>Scheduler</h2>
+        <p>
+          Don't know when to take your medications? No problem! This scheduler
+          will help you take your meds at the right times.
+        </p>
+        <p>Enter the name of the drug you want to add to your schedule</p>
+        <input
+          id="drug-input"
+          placeholder="Type drug name here!"
+          value={input}
+          style={{ width: "100%", textAlign: "center" }}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <button id="add-button" type="button" onClick={addDrug}>
+          Add Drug  
+        </button>
+        {error && <p className="error">{error}</p>}
+        {schedule.length > 0 && (
+          <div className="result">
+            <h3>Your Medication Schedule:</h3>
+            <ul>
+              {schedule.map((item, idx) => (
+                <li key={idx}>
+                  <strong>{item.name}</strong> - {item.time}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </main>
       <Link to="/login" className="dashboard-login-link">
         <button className="login-button">
@@ -46,5 +89,5 @@ const InteractionChecker = () => {
     </div>
   );
 };
-export default InteractionChecker;
-// This component is a placeholder for the interaction checker functionality.
+
+export default Scheduler;

@@ -14,4 +14,6 @@ textarea {
 
 fieldset {
   border: 1px solid #fb8122;
+  background-color: #a6bd9d;
+  /* Try changing the background color for this to get it to be grey*/
 }
