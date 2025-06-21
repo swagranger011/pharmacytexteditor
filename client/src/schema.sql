@@ -21,3 +21,11 @@ CREATE TABLE DrugInteractions (
     CONSTRAINT FK_Drug2 FOREIGN KEY (Drug2ID) REFERENCES Drugs(DrugID),
     CONSTRAINT CHK_DrugOrder CHECK (Drug1ID < Drug2ID) -- Prevents duplicate pairs
 );
+
+Create Table DrugInfo (
+    DrugID INT PRIMARY KEY,
+    Name NVARCHAR(100) NOT NULL,
+    GenericName NVARCHAR(100),
+    DrugDescription NVARCHAR(1000),    
+    FOREIGN KEY (DrugID) REFERENCES Drugs(DrugID)
+)

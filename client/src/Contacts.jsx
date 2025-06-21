@@ -28,6 +28,9 @@ const Contacts = () => {
           <li>
             <Link to="/scheduler">Scheduler</Link>
           </li>
+          <li>
+            <Link to="/contacts">Contact Us</Link>
+          </li>
         </ul>
       </nav>
       <main className="dashboard-main">
