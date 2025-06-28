@@ -71,7 +71,7 @@ const DrugInformation = () => {
               <strong>Generic Name:</strong> {info.GenericName}
             </p>
             <p>
-              <strong>Drug Class:</strong> {info.DrugClass}
+              <strong>Description:</strong> {info.DrugDescription}
             </p>
           </div>
         )}

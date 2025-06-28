@@ -167,7 +167,7 @@ app.get("/api/drug-info", async (req, res) => {
     const request = pool.request();
     request.input("name", sql.NVarChar, name);
     const result = await request.query(
-      "SELECT * FROM Drugs WHERE Name = @name"
+      "SELECT Name, GenericName, DrugDescription FROM DrugInfo WHERE Name = @name"
     );
     if (result.recordset.length === 0) {
       return res.status(404).json({ error: "Drug not found" });
