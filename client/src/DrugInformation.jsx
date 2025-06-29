@@ -47,6 +47,9 @@ const DrugInformation = () => {
             <Link to="/scheduler">Scheduler</Link>
           </li>
           <li>
+            <Link to="/faqs">FAQs</Link>
+          </li>
+          <li>
             <Link to="/contacts">Contact Us</Link>
           </li>
         </ul>

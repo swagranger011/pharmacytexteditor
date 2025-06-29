@@ -68,11 +68,15 @@ const PharmacyTextEditor = () => {
             <Link to="/scheduler">Scheduler</Link>
           </li>
           <li>
+            <Link to="/faqs">FAQs</Link>
+          </li>
+          <li>
             <Link to="/contacts">Contact Us</Link>
           </li>
         </ul>
       </nav>
       <main className="dashboard-main">
+        <h2>Sig Code Translator</h2>
         <p>
           Hello there! Have a SIG code and don't know what it means. No worries!
           Just enter your SIG code here and it will translate it into proper

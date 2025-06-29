@@ -8,6 +8,7 @@ import Scheduler from "./Scheduler";
 import Mode from "./Mode";
 import Login from "./Login";
 import Contacts from "./Contacts";
+import FAQs from "./FAQs";
 
 import './App.css';
 
@@ -23,6 +24,7 @@ function App(){
           <Route path="/mode" element={<Mode />} />
           <Route path="/login" element={<Login />} />
           <Route path="/contacts" element={<Contacts />} />
+          <Route path="/faqs" element={<FAQs />} />
         </Routes>
       </Router>
   );

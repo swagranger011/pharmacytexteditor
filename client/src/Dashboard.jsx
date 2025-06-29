@@ -19,6 +19,7 @@ const Dashboard = () => {
             <li><Link to="/interaction-checker">Interaction Checker</Link></li>
             <li><Link to="/drug-information">Drug Information</Link></li>
             <li><Link to="/Scheduler">Scheduler</Link></li>
+            <li><Link to="/faqs">FAQs</Link></li>
             <li><Link to="/contacts">Contact Us</Link></li>
             </ul>
         </nav>

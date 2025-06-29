@@ -3,10 +3,26 @@ import { Link } from "react-router-dom";
 import Mode from "./Mode";
 import "./Mode.css";
 
+const timeOptions = [
+  { label: "Morning", value: "morning" },
+  { label: "Afternoon", value: "afternoon" },
+  { label: "Evening", value: "evening" },
+  { label: "Nighttime", value: "nighttime" },
+];
+
 const Scheduler = () => {
   const [input, setInput] = useState("");
   const [schedule, setSchedule] = useState([]);
   const [error, setError] = useState(null);
+  const [selectedTimes, setSelectedTimes] = useState([]);
+
+  const handleTimeChange = (time) => {
+    setSelectedTimes((prev) =>
+      prev.includes(time)
+        ? prev.filter((t) => t !== time)
+        : [...prev, time]
+    );
+  };
 
   const addDrug = () => {
     setError(null);
@@ -14,9 +30,16 @@ const Scheduler = () => {
       setError("Please enter a drug name.");
       return;
     }
-    // For demonstration, just add with a placeholder time
-    setSchedule([...schedule, { name: input.trim(), time: "08:00 AM" }]);
+    if (selectedTimes.length === 0) {
+      setError("Please select at least one time.");
+      return;
+    }
+    setSchedule([
+      ...schedule,
+      { name: input.trim(), times: [...selectedTimes] },
+    ]);
     setInput("");
+    setSelectedTimes([]);
   };
 
   return (
@@ -43,6 +66,9 @@ const Scheduler = () => {
             <Link to="/scheduler">Scheduler</Link>
           </li>
           <li>
+            <Link to="/faqs">FAQs</Link>
+          </li>
+          <li>
             <Link to="/contacts">Contact Us</Link>
           </li>
         </ul>
@@ -61,6 +87,18 @@ const Scheduler = () => {
           style={{ width: "100%", textAlign: "center" }}
           onChange={(e) => setInput(e.target.value)}
         />
+        <div style={{ margin: "10px 0" }}>
+          {timeOptions.map((option) => (
+            <label key={option.value} style={{ marginRight: "15px" }}>
+              <input
+                type="checkbox"
+                checked={selectedTimes.includes(option.value)}
+                onChange={() => handleTimeChange(option.value)}
+              />
+              {option.label}
+            </label>
+          ))}
+        </div>
         <button id="add-button" type="button" onClick={addDrug}>
           Add Drug  
         </button>
@@ -71,7 +109,8 @@ const Scheduler = () => {
             <ul>
               {schedule.map((item, idx) => (
                 <li key={idx}>
-                  <strong>{item.name}</strong> - {item.time}
+                  <strong>{item.name}</strong> -{" "}
+                  {item.times.map((t) => t.charAt(0).toUpperCase() + t.slice(1)).join(", ")}
                 </li>
               ))}
             </ul>
