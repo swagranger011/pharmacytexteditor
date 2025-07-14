@@ -1,6 +1,6 @@
 -- Insert Interactions
 INSERT INTO DrugInteractions (Drug1ID, Drug2ID, Severity, Description, Mechanism, Management) VALUES
-/*((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Warfarin', 'Aspirin')),
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Warfarin', 'Aspirin')),
  (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Warfarin', 'Aspirin')),
  'High',
  'Increased bleeding risk',
@@ -110,7 +110,7 @@ INSERT INTO DrugInteractions (Drug1ID, Drug2ID, Severity, Description, Mechanism
  'Low',
  'No significant interaction',
  'NULL',
- 'No special management required'),*/
+ 'No special management required'),
 
 ((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Cipro', 'Lipitor')),
  (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Cipro', 'Lipitor')),
@@ -138,4 +138,71 @@ INSERT INTO DrugInteractions (Drug1ID, Drug2ID, Severity, Description, Mechanism
  'Low',
  'No significant interaction',
  'NULL',
+ 'No special management required'), 
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Cipro', 'Gabapentin')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Cipro', 'Gabapentin')),
+ 'Low',
+ 'No significant interaction',
+ 'NULL',
+ 'No special management required'),
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Metformin', 'Gabapentin')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Metformin', 'Gabapentin')),
+ 'Low',
+ 'No significant interaction',
+ 'NULL',
+ 'No special management required'),
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Cipro', 'Hydrochlorothiazide')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Cipro', 'Hydrochlorothiazide')),
+ 'Low',
+ 'No significant interaction',
+ 'NULL',
+ 'No special management required'),
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Metformin', 'Hydrochlorothiazide')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Metformin', 'Hydrochlorothiazide')),
+ 'Low',
+ 'No significant interaction',
+ 'NULL',
+ 'No special management required'),
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Cipro', 'Lasix')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Cipro', 'Lasix')),
+ 'Low',
+ 'No significant interaction',
+ 'NULL',
+ 'No special management required'),
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Metformin', 'Lasix')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Metformin', 'Lasix')),
+ 'Low',
+ 'No significant interaction',
+ 'NULL',
+ 'No special management required'),
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Cipro', 'Albuterol')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Cipro', 'Albuterol')),
+ 'Low',
+ 'No significant interaction',
+ 'NULL',
+ 'No special management required'),
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Metformin', 'Albuterol')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Metformin', 'Albuterol')),
+ 'Low',
+ 'No significant interaction',
+ 'NULL',
  'No special management required');
+
+ --Remove Duplicate Interactions
+WITH Duplicates AS (
+  SELECT *,
+    ROW_NUMBER() OVER (
+      PARTITION BY Drug1ID, Drug2ID, Severity, Description, Mechanism, Management
+      ORDER BY InteractionID
+    ) AS rn
+  FROM DrugInteractions
+)
+DELETE FROM Duplicates WHERE rn > 1;
