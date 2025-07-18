@@ -38,6 +38,26 @@ const FAQs = () => {
       question: "How are controlled substances classified?",
       answer:
         "Controlled substances are classified into schedules based on their potential for abuse, medical use, and safety. The schedules range from Schedule I (high potential for abuse, no accepted medical use) to Schedule V (low potential for abuse, accepted medical use). Schedule II drugs, for example, have a high potential for abuse but are accepted for medical use with severe restrictions.",
+    },
+    {
+      question: "What is the purpose of the Pharmacy Text Editor?",
+      answer:
+        "The Pharmacy Text Editor is a tool that helps pharmacists and healthcare professionals translate sig codes into plain language, making it easier to understand medication instructions.",
+    },
+    { question: "What are the side effects of getting vaccines?", 
+      answer: "Common side effects of vaccines include pain at the injection site, fatigue, headache, muscle pain, chills, fever, and nausea. These side effects are usually mild and temporary." 
+    },
+    { question: "How can I manage my medications effectively?", 
+      answer: "To manage your medications effectively, keep a list of all your medications, set reminders for when to take them, and regularly review your medications with your healthcare provider." 
+    },
+    { question: "What should I do if I miss a dose of my medication?",
+      answer: "If you miss a dose of your medication, take it as soon as you remember. If it's almost time for your next dose, skip the missed dose and continue with your regular schedule. Do not double up on doses." 
+    },
+    { question: "How can I find out if a drug is safe to take with my other medications?",
+      answer: "You can use the Interaction Checker tool on WebRX to check if a drug is safe to take with your other medications. Simply enter the names of the drugs you are taking and the tool will check for potential interactions." 
+    },
+    { question: "What should I do if I experience side effects from a medication?",
+      answer: "If you experience side effects from a medication, contact your healthcare provider immediately. They can help determine if the side effects are serious and if you need to stop taking the medication or adjust the dosage. Always report any side effects to your healthcare provider, even if they seem minor."
     }
   ]);
 

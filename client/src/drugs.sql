@@ -77,4 +77,13 @@ INSERT INTO Drugs (Name, GenericName, DrugClass) VALUES
 ('Bactrim', 'Trimethoprim-Sulfamethoxazole', 'Antibiotic'),
 ('Augmentin', 'Amoxicillin-Clavulanate Potassium', 'Antibiotic'),
 ('Cipro HC Otic', 'Ciprofloxacin-Hydrocortisone', 'Otic Antibiotic'),
-('Lotrel', 'Amlodipine-Benazepril', 'Combination Antihypertensive');
+('Lotrel', 'Amlodipine-Benazepril', 'Combination Antihypertensive'),
+('Combivent', 'Ipratropium-Albuterol', 'Bronchodilator Combination'),
+('Symbicort', 'Budesonide-Formoterol', 'Corticosteroid-Bronchodilator Combination'),
+('Advair Diskus', 'Fluticasone-Salmeterol', 'Corticosteroid-Bronchodilator Combination'),
+('Singulair Chewable', 'Montelukast Sodium Chewable', 'Leukotriene Receptor Antagonist'),
+('Zostavax', 'Zoster Vaccine Live', 'Vaccine'),
+('FluMist', 'Influenza Vaccine Live', 'Vaccine'),
+('Gardasil', 'Human Papillomavirus Vaccine', 'Vaccine'),
+('Prevnar 13', 'Pneumococcal Conjugate Vaccine', 'Vaccine'),
+('Hepatitis B Vaccine', 'Hepatitis B Vaccine Recombinant', 'Vaccine');
