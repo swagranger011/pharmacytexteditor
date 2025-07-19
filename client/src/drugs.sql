@@ -1,3 +1,17 @@
+-- SQL script to remove duplicate entries in the Drugs table based on the Name column
+-- This script identifies duplicates by using a Common Table Expression (CTE) and deletes them
+-- It assumes that the Drugs table has a primary key column named DrugID
+WITH Duplicates AS (
+  SELECT
+    DrugID,
+    ROW_NUMBER() OVER (
+      PARTITION BY Name
+      ORDER BY DrugID
+    ) AS rn
+  FROM Drugs
+)
+DELETE FROM Duplicates WHERE rn > 1;
+
 -- SQL script to create Drugs and DrugInteractions tables, insert initial data, and query interactions
 -- Insert initial data into Drugs and DrugInteractions tables
 -- Insert Drugs
@@ -86,4 +100,58 @@ INSERT INTO Drugs (Name, GenericName, DrugClass) VALUES
 ('FluMist', 'Influenza Vaccine Live', 'Vaccine'),
 ('Gardasil', 'Human Papillomavirus Vaccine', 'Vaccine'),
 ('Prevnar 13', 'Pneumococcal Conjugate Vaccine', 'Vaccine'),
-('Hepatitis B Vaccine', 'Hepatitis B Vaccine Recombinant', 'Vaccine');
+('Hepatitis B Vaccine', 'Hepatitis B Vaccine Recombinant', 'Vaccine'),
+('Shingrix', 'Zoster Vaccine Recombinant', 'Vaccine'),
+('Beyaz', 'Drospirenone-Ethinyl Estradiol', 'Oral Contraceptive'),
+('Yasmin', 'Drospirenone-Ethinyl Estradiol', 'Oral Contraceptive'),
+('Ortho Tri-Cyclen', 'Norgestimate-Ethinyl Estradiol', 'Oral Contraceptive'),
+('NuvaRing', 'Etonogestrel-Ethinyl Estradiol', 'Vaginal Contraceptive Ring'),
+('Depo-Provera', 'Medroxyprogesterone Acetate', 'Injectable Contraceptive'),
+('Plan B One-Step', 'Levonorgestrel', 'Emergency Contraceptive'),
+('Aldactone', 'Spironolactone', 'Potassium-Sparing Diuretic'),
+('K-Tab', 'Potassium Chloride', 'Electrolyte Supplement'),
+('Zantac', 'Ranitidine Hydrochloride', 'H2 Antagonist'),
+('Pepcid', 'Famotidine', 'H2 Antagonist'),
+('Prilosec OTC', 'Omeprazole Magnesium', 'Proton Pump Inhibitor'),
+('Prevacid', 'Lansoprazole', 'Proton Pump Inhibitor'),
+('Nexium', 'Esomeprazole Magnesium', 'Proton Pump Inhibitor'),
+('Tums', 'Calcium Carbonate', 'Antacid'),
+('Maalox', 'Aluminum Hydroxide-Magnesium Hydroxide-Simethicone', 'Antacid'),
+('Imodium AD', 'Loperamide Hydrochloride', 'Antidiarrheal'),
+('Pepto-Bismol', 'Bismuth Subsalicylate', 'Antidiarrheal'),
+('Miralax', 'Polyethylene Glycol 3350', 'Laxative'),
+('Colace', 'Docusate Sodium', 'Stool Softener'),
+('Metamucil', 'Psyllium Husk', 'Fiber Supplement'),
+('Zantac 75', 'Ranitidine Hydrochloride', 'H2 Antagonist'),
+('Pepcid AC', 'Famotidine', 'H2 Antagonist'),
+('Tagamet HB', 'Cimetidine', 'H2 Antagonist'),
+('Gas-X', 'Simethicone', 'Antiflatulent'),
+('Beano', 'Alpha-Galactosidase Enzyme', 'Digestive Aid'),
+('Lactaid', 'Lactase Enzyme', 'Digestive Aid'),
+('Prevacid 24HR', 'Lansoprazole', 'Proton Pump Inhibitor'),
+('Nexium 24HR', 'Esomeprazole Magnesium', 'Proton Pump Inhibitor'),
+('Zyrtec-D', 'Cetirizine-Pseudoephedrine', 'Antihistamine/Decongestant Combination'),
+('Claritin-D', 'Loratadine-Pseudoephedrine', 'Antihistamine/Decongestant Combination'),
+('Allegra-D', 'Fexofenadine-Pseudoephedrine', 'Antihistamine/Decongestant Combination'),
+('Robitussin DM', 'Dextromethorphan-Guaifenesin', 'Cough Suppressant/Expectorant'),
+('Mucinex DM', 'Dextromethorphan-Guaifenesin', 'Cough Suppressant/Expectorant'),
+('NyQuil', 'Acetaminophen-Dextromethorphan-Doxylamine', 'Cold/Flu Combination'),
+('DayQuil', 'Acetaminophen-Dextromethorphan-Guaifenesin', 'Cold/Flu Combination'),
+('Theraflu', 'Acetaminophen-Dextromethorphan-Phenylephrine', 'Cold/Flu Combination'),
+('Sudafed PE', 'Phenylephrine Hydrochloride', 'Decongestant'),
+('Sudafed 12 Hour', 'Pseudoephedrine Sulfate', 'Decongestant'),
+('Afrin', 'Oxymetazoline Hydrochloride', 'Nasal Decongestant Spray'),
+('Zicam', 'Zinc Gluconate', 'Cold Remedy'),
+('Neosporin', 'Bacitracin-Neomycin-Polymyxin B', 'Topical Antibiotic'),
+('Hydrocortisone Cream', 'Hydrocortisone', 'Topical Corticosteroid'),
+('Lotrimin AF', 'Clotrimazole Antifungal Cream', 'Antifungal Cream'),
+('Tinactin Powder Spray', 'Tolnaftate Powder Spray', 'Antifungal Powder Spray'),
+('Monistat 1-Day Treatment', 'Miconazole Nitrate Vaginal Cream', 'Antifungal Vaginal Cream'),
+('Monistat 7-Day Treatment', 'Miconazole Nitrate Vaginal Cream', 'Antifungal Vaginal Cream'),
+('Lotrimin AF Athlete''s Foot Powder', 'Clotrimazole Antifungal Powder', 'Antifungal Powder'),
+('Tinactin Antifungal Powder', 'Tolnaftate Antifungal Powder', 'Antifungal Powder'),
+('Hydrocortisone 1% Cream', 'Hydrocortisone Cream', 'Topical Corticosteroid'),
+('Neosporin Plus Pain Relief', 'Bacitracin-Neomycin-Polymyxin B-Pramoxine', 'Topical Antibiotic/Pain Relief'),
+('Bactroban Ointment', 'Mupirocin Calcium Ointment', 'Topical Antibiotic'),
+('Polysporin Ointment', 'Bacitracin-Polymyxin B Ointment', 'Topical Antibiotic'),
+('Aloe Vera Gel', 'Aloe Vera Gel', 'Topical Moisturizer');  

@@ -361,7 +361,56 @@ INSERT INTO DrugInteractions (Drug1ID, Drug2ID, Severity, Description, Mechanism
  'Low',
  'No significant interaction',
  'NULL',
- 'No special management required');
+ 'No special management required'),
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Insulin Glargine')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Insulin Glargine')),
+ 'Low',
+ 'No significant interaction',
+ 'NULL',
+ 'No special management required'), 
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Insulin Lispro')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Insulin Lispro')),
+ 'Low',
+ 'No significant interaction',
+ 'NULL',
+ 'No special management required'), 
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Klonopin')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Klonopin')),
+ 'Moderate',
+ 'Increased risk of CNS depression',
+ 'Both drugs can cause sedation',
+ 'Monitor for sedation and consider dose adjustments'),
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Ativan')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Ativan')),
+ 'Moderate',
+ 'Increased risk of CNS depression',
+ 'Both drugs can cause sedation',
+ 'Monitor for sedation and consider dose adjustments'), 
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Valium')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Valium')),
+ 'Moderate',
+ 'Increased risk of CNS depression',
+ 'Both drugs can cause sedation',
+ 'Monitor for sedation and consider dose adjustments'), 
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Xanax')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Xanax')),
+ 'Moderate',
+ 'Increased risk of CNS depression',
+ 'Both drugs can cause sedation',
+ 'Monitor for sedation and consider dose adjustments'),
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Oxycodone')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Oxycodone')),
+ 'Moderate',
+ 'Increased risk of CNS depression',
+ 'Both drugs can cause sedation',
+ 'Monitor for sedation and consider dose adjustments');
 
  --Remove Duplicate Interactions
 WITH Duplicates AS (
