@@ -9,7 +9,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
         <header className="dashboard-header">
-            <h1>WebRX</h1>
+            <h1 className='Title'>WebRX</h1>
             <Mode />
         </header>
         <nav className="dashboard-nav">
