@@ -154,4 +154,5 @@ INSERT INTO Drugs (Name, GenericName, DrugClass) VALUES
 ('Neosporin Plus Pain Relief', 'Bacitracin-Neomycin-Polymyxin B-Pramoxine', 'Topical Antibiotic/Pain Relief'),
 ('Bactroban Ointment', 'Mupirocin Calcium Ointment', 'Topical Antibiotic'),
 ('Polysporin Ointment', 'Bacitracin-Polymyxin B Ointment', 'Topical Antibiotic'),
-('Aloe Vera Gel', 'Aloe Vera Gel', 'Topical Moisturizer');  
+('Aloe Vera Gel', 'Aloe Vera Gel', 'Topical Moisturizer'),
+('Fentanyl', 'Fentanyl', 'Opioid Analgesic');

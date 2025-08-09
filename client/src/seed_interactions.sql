@@ -410,6 +410,13 @@ INSERT INTO DrugInteractions (Drug1ID, Drug2ID, Severity, Description, Mechanism
  'Moderate',
  'Increased risk of CNS depression',
  'Both drugs can cause sedation',
+ 'Monitor for sedation and consider dose adjustments'),
+
+((SELECT MIN(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Fentanyl')),
+ (SELECT MAX(DrugID) FROM Drugs WHERE Name IN ('Gabapentin', 'Fentanyl')),
+ 'Moderate',
+ 'Increased risk of CNS depression',
+ 'Both drugs can cause sedation',
  'Monitor for sedation and consider dose adjustments');
 
  --Remove Duplicate Interactions
