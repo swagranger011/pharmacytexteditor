@@ -179,6 +179,50 @@ app.get("/api/drug-info", async (req, res) => {
   }
 });
 
+app.post("/api/register", express.json(), async (req, res) => {
+  const { username, name, email, password } = req.body;
+  const userNameToInsert = username || name;
+  if (!userNameToInsert || !email || !password) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+  try {
+    const request = pool.request();
+    request.input("name", sql.NVarChar, userNameToInsert);
+    request.input("email", sql.NVarChar, email);
+    request.input("password", sql.NVarChar, password);
+    await request.query(
+      "INSERT INTO Users (Name, Email, Password) VALUES (@name, @email, @password)"
+    );
+    res.status(201).json({ message: "User registered successfully" });
+  } catch (err) {
+    console.error("Registration error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.post("/api/login", express.json(), async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: "Username and password are required" });
+  }
+  try {
+    const request = pool.request();
+    request.input("username", sql.NVarChar, username);
+    request.input("password", sql.NVarChar, password);
+    const result = await request.query(
+      "SELECT UserID FROM Users WHERE Name = @username AND Password = @password"
+    );
+    if (result.recordset.length === 0) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+    // In a real app, generate a token/session here
+    res.json({ message: "Login successful", token: "dummy-token" });
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 // Serve static files
 app.use(express.static(path.join(__dirname, 'client')));
 

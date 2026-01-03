@@ -23,6 +23,7 @@ function App(){
           <Route path="/scheduler" element={<Scheduler />} />
           <Route path="/mode" element={<Mode />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Login />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/faqs" element={<FAQs />} />
         </Routes>
