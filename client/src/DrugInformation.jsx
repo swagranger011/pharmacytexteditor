@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Mode from "./Mode";
 import "./Mode.css";
@@ -7,19 +7,34 @@ const DrugInformation = () => {
   const [input, setInput] = useState("");
   const [info, setInfo] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  // Debounce input for API calls
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (input.trim()) {
+        getDrugInfo();
+      }
+    }, 500); // 500ms delay
+    return () => clearTimeout(timer);
+  }, [input]);
 
   const getDrugInfo = async () => {
     setError(null);
     setInfo(null);
+    setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:8081/api/drug-info?name=${encodeURIComponent(input)}`
+        `http://localhost:8081/api/drug-info?name=${encodeURIComponent(input.trim())}`
       );
+      if (!response.ok) throw new Error("Network error. Please try again.");
       const data = await response.json();
       if (data.error) throw new Error(data.error);
       setInfo(data);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,10 +77,9 @@ const DrugInformation = () => {
           placeholder="Type drug name here!"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          aria-label="Drug name input"
         />
-        <button id="info-button" onClick={getDrugInfo}>
-          Get Drug Information
-        </button>
+        {loading && <p>Loading...</p>}
         {error && <p className="error">{error}</p>}
         {info && (
           <div className="result">
@@ -90,4 +104,5 @@ const DrugInformation = () => {
     </div>
   );
 };
+
 export default DrugInformation;

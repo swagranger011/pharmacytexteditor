@@ -20,6 +20,13 @@ div {
     grid-template-columns: repeat(1, 1fr); /* 1x1 layout by default */
     gap: 1.2em;
     margin: 5em;
+    border: 2px solid #1e1e1e;
+    border-radius: 12px;
+    padding: 2em;
+}
+
+[data-theme="dark"] .dashboard-main {
+    border: 2px solid #ddd;
 }
 
 .tool-card {
@@ -43,6 +50,13 @@ div {
 .tool-card:hover {
     transform: translateY(-6px);
     box-shadow: 6px 12px 20px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="dark"] .tool-card {
+    background-color: #1e1e1e;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 4px 4px 4px rgba(173, 170, 170, 0.5);
+    color: #ddd;
 }
 
 .tool-card-grid,

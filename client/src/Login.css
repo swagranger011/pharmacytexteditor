@@ -153,6 +153,16 @@ form .message {
   color: #c98672;;
 }
 
+[data-theme="dark"] .login-button {
+  background-color: #c03d15;
+  color: rgb(7, 1, 1);
+}
+
+[data-theme="dark"] .login-button:hover {
+  background-color: #757acc;
+  box-shadow: 1px 1px 50px #3945e2;
+}
+
 [data-theme="light"] .login-button:hover {
   background-color: #646cff;
   box-shadow: 1px 1px 50px #616161;
@@ -161,4 +171,19 @@ form .message {
 [data-theme="light"] .log-on {
   background-color: #000000;
   color:rgb(255, 255, 255);
+}
+
+[data-theme="dark"] .log-on {
+  background-color: #c03d15;
+  color: rgb(7, 1, 1);
+}
+
+[data-theme="dark"] .log-on:hover {
+  background-color: #757acc;
+  box-shadow: 1px 1px 50px #3945e2;
+}
+
+[data-theme="light"] .log-on:hover {
+  background-color: #646cff;
+  box-shadow: 1px 1px 50px #616161;
 }

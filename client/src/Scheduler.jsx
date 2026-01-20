@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Mode from "./Mode";
 import "./Mode.css";
@@ -15,6 +15,19 @@ const Scheduler = () => {
   const [schedule, setSchedule] = useState([]);
   const [error, setError] = useState(null);
   const [selectedTimes, setSelectedTimes] = useState([]);
+
+  // Load schedule from localStorage on mount
+  useEffect(() => {
+    const savedSchedule = localStorage.getItem("medicationSchedule");
+    if (savedSchedule) {
+      setSchedule(JSON.parse(savedSchedule));
+    }
+  }, []);
+
+  // Save schedule to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("medicationSchedule", JSON.stringify(schedule));
+  }, [schedule]);
 
   const handleTimeChange = (time) => {
     setSelectedTimes((prev) =>
@@ -34,12 +47,21 @@ const Scheduler = () => {
       setError("Please select at least one time.");
       return;
     }
+    // Check for duplicates
+    if (schedule.some((item) => item.name.toLowerCase() === input.trim().toLowerCase())) {
+      setError("This drug is already in your schedule.");
+      return;
+    }
     setSchedule([
       ...schedule,
       { name: input.trim(), times: [...selectedTimes] },
     ]);
     setInput("");
     setSelectedTimes([]);
+  };
+
+  const removeDrug = (index) => {
+    setSchedule(schedule.filter((_, idx) => idx !== index));
   };
 
   return (
@@ -111,6 +133,13 @@ const Scheduler = () => {
                 <li key={idx}>
                   <strong>{item.name}</strong> -{" "}
                   {item.times.map((t) => t.charAt(0).toUpperCase() + t.slice(1)).join(", ")}
+                  <button
+                    type="button"
+                    onClick={() => removeDrug(idx)}
+                    style={{ marginLeft: "10px"}}
+                  >
+                    Remove
+                  </button>
                 </li>
               ))}
             </ul>
