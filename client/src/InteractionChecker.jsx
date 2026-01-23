@@ -1,40 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Mode from "./Mode";
 import "./Mode.css";
+
+const API_BASE_URL = "http://localhost:8081/api";
 
 const InteractionChecker = () => {
   const [drugs, setDrugs] = useState(["", ""]);
   const [interactions, setInteractions] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleDrugChange = (index, value) => {
-    const newDrugs = [...drugs];
-    newDrugs[index] = value;
-    setDrugs(newDrugs);
-  };
+  const handleDrugChange = useCallback(
+    (index, value) => {
+      const newDrugs = [...drugs];
+      newDrugs[index] = value;
+      setDrugs(newDrugs);
+    },
+    [drugs]
+  );
 
   const addDrugInput = () => {
     setDrugs([...drugs, ""]);
   };
 
+  const removeDrug = useCallback(
+    (index) => {
+      setDrugs(drugs.filter((_, i) => i !== index));
+    },
+    [drugs]
+  );
+
   const checkInteractions = async () => {
     setError(null);
     setInteractions([]);
+    setLoading(true);
     try {
-      const response = await fetch(
-        "http://localhost:8081/api/check-interactions",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ drugs: drugs.filter((d) => d.trim()) }),
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/check-interactions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ drugs: drugs.filter((d) => d.trim()) }),
+      });
       const data = await response.json();
-      if (data.error) throw new Error(data.error);
+      if (!response.ok)
+        throw new Error(data.error || "Failed to check interactions");
       setInteractions(data.interactions);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,13 +87,22 @@ const InteractionChecker = () => {
         <h2>Interaction Checker</h2>
         <p>Enter the names of the drugs you want to check for interactions:</p>
         {drugs.map((drug, idx) => (
-          <input
-            key={idx}
-            style={{ display: "block", marginBottom: "8px", width: "auto", textAlign: "center" }}
-            value={drug}
-            onChange={(e) => handleDrugChange(idx, e.target.value)}
-            placeholder="Type drug name here!"
-          />
+          <div key={idx}>
+            <label htmlFor={`drug-${idx}`}>Drug {idx + 1}:</label>
+            <input
+              id={`drug-${idx}`}
+              className="drug-input"
+              value={drug}
+              onChange={(e) => handleDrugChange(idx, e.target.value)}
+              placeholder="Type drug name here!"
+              aria-describedby={error ? "error-message" : undefined}
+            />
+            {drugs.length > 1 && (
+              <button type="button" onClick={() => removeDrug(idx)}>
+                Remove
+              </button>
+            )}
+          </div>
         ))}
         <button type="button" onClick={addDrugInput}>
           Add Drug
@@ -88,8 +111,9 @@ const InteractionChecker = () => {
           id="check-button"
           type="button"
           onClick={checkInteractions}
+          disabled={loading}
         >
-          Check Interactions
+          {loading ? "Checking..." : "Check Interactions"}
         </button>
         {error && <p className="error">{error}</p>}
         {interactions.length > 0 && (
@@ -111,6 +135,9 @@ const InteractionChecker = () => {
               ))}
             </ul>
           </div>
+        )}
+        {interactions.length === 0 && !loading && !error && (
+          <p>No interactions found. Try adding more drugs.</p>
         )}
       </main>
       <Link to="/login" className="dashboard-login-link">

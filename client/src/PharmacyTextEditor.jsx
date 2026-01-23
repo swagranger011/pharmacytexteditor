@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import "./Mode.css";
 import Mode from "./Mode";
+
+const API_BASE_URL = "http://localhost:8081";
 
 const PharmacyTextEditor = () => {
   const [inputText, setInputText] = useState("");
@@ -9,39 +11,43 @@ const PharmacyTextEditor = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const handleInputChange = useCallback((value) => {
+    if (value.length <= 500) setInputText(value); // Limit to 500 chars
+  }, []);
+
   const fetchData = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
+    setTranslation([]);
     try {
-      if (!inputText.trim()) {
-        throw new Error("Please enter a SIG code");
-      }
-
-      const response = await fetch("http://localhost:8081/Codes", {
+      if (!inputText.trim()) throw new Error("Please enter a SIG code");
+      const response = await fetch(`${API_BASE_URL}/Codes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code: inputText.trim() }),
       });
-
       const data = await response.json();
-
       if (data.error) throw new Error(data.error);
       if (!data.translations || !Array.isArray(data.translations)) {
         throw new Error("Translation format error");
       }
-
       setTranslation(data.translations);
-      setError(null);
     } catch (error) {
       setError(
         error.message.includes("fetch")
           ? "Connection to server failed"
           : error.message
       );
-      setTranslation([]);
     } finally {
       setLoading(false);
     }
+  };
+
+  const clearAll = () => {
+    setInputText("");
+    setTranslation([]);
+    setError(null);
   };
 
   return (
@@ -88,11 +94,14 @@ const PharmacyTextEditor = () => {
             rows={3}
             style={{ width: "100%" }}
             value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
+            onChange={(e) => handleInputChange(e.target.value)}
             placeholder="Enter Sig code here!"
           />
           <button type="submit" disabled={loading}>
             {loading ? "Translating..." : "Translate"}
+          </button>
+          <button type="button" onClick={clearAll}>
+            Clear
           </button>
         </form>
 

@@ -37,9 +37,29 @@ body{display:flex;flex-direction:column;align-items:center}
 /* Layout containers */
 #root{width:100%;max-width:var(--max-width);margin:0 auto;padding:1.5rem}
 header{display:flex;align-items:center;justify-content:space-between;padding:1rem 0}
+nav {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  box-shadow: var(--card-shadow);
+}
 nav ul{display:flex;gap:1.25rem;margin:0;padding:0;list-style:none;align-items:center}
-nav a{color:var(--accent);text-decoration:none;font-weight:600}
-nav a:hover{color:var(--accent-2)}
+nav a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+nav a:hover {
+  color: var(--accent-2);
+  background-color: rgba(14, 165, 233, 0.1);
+}
+nav a:active {
+  background-color: rgba(230, 72, 51, 0.1);
+}
 
 /* Page sections */
 section, .content{width:100%;display:flex;gap:2rem;align-items:center;justify-content:space-between;padding:3rem 0}
@@ -54,6 +74,8 @@ button{
 }
 button:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,0.08)}
 button.secondary{background:transparent;color:var(--text);border:1px solid var(--input-border)}
+
+
 
 /* Card / forms */
 .form{
@@ -84,7 +106,8 @@ button.secondary{background:transparent;color:var(--text);border:1px solid var(-
 /* Small screens */
 @media (max-width:780px){
   section, .content{flex-direction:column;padding:1.25rem}
-  nav ul{margin-left:0}
+  nav ul{margin-left:0;flex-direction:column;gap:0.75rem}
+  nav a{padding:0.75rem;text-align:center}
   .form{width:100%;padding:1rem}
 }
 
