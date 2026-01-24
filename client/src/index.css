@@ -61,6 +61,17 @@ nav a:active {
   background-color: rgba(230, 72, 51, 0.1);
 }
 
+[data-theme="dark"] nav a {
+  color: var(--accent-2);
+}
+[data-theme="dark"] nav a:hover {
+  color: var(--accent);
+  background-color: rgba(230, 72, 51, 0.1);
+}
+[data-theme="dark"] nav a:active {
+  background-color: rgba(14, 165, 233, 0.1);
+} 
+
 /* Page sections */
 section, .content{width:100%;display:flex;gap:2rem;align-items:center;justify-content:space-between;padding:3rem 0}
 

@@ -73,6 +73,20 @@ const Login = () => {
     }
   };
 
+  // In a utility file or here, wrap fetch calls
+  const apiCall = async (url, options = {}) => {
+    const token = localStorage.getItem("token");
+    const res = await fetch(url, {
+      ...options,
+      headers: { ...options.headers, Authorization: `Bearer ${token}` },
+    });
+    if (res.status === 401) {
+      localStorage.removeItem("token");
+      navigate("/login");
+    }
+    return res;
+  };
+
   return (
     <div className="login-page">
       <h1 className="Title">WebRX</h1>

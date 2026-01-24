@@ -2,6 +2,8 @@ const express = require('express');
 const sql = require('mssql');
 const cors = require('cors');
 const path = require('path');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 app.use(cors({
@@ -186,10 +188,11 @@ app.post("/api/register", express.json(), async (req, res) => {
     return res.status(400).json({ error: "All fields are required" });
   }
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
     const request = pool.request();
     request.input("name", sql.NVarChar, userNameToInsert);
     request.input("email", sql.NVarChar, email);
-    request.input("password", sql.NVarChar, password);
+    request.input("password", sql.NVarChar, hashedPassword);
     await request.query(
       "INSERT INTO Users (Name, Email, Password) VALUES (@name, @email, @password)"
     );
@@ -208,19 +211,39 @@ app.post("/api/login", express.json(), async (req, res) => {
   try {
     const request = pool.request();
     request.input("username", sql.NVarChar, username);
-    request.input("password", sql.NVarChar, password);
     const result = await request.query(
-      "SELECT UserID FROM Users WHERE Name = @username AND Password = @password"
+      "SELECT UserID, Password FROM Users WHERE Name = @username"
     );
     if (result.recordset.length === 0) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
-    // In a real app, generate a token/session here
-    res.json({ message: "Login successful", token: "dummy-token" });
+    const user = result.recordset[0];
+    const isValid = await bcrypt.compare(password, user.Password);
+    if (!isValid) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+    const token = jwt.sign({ userId: user.UserID }, 'your-secret-key', { expiresIn: '1h' });
+    res.json({ message: "Login successful", token });
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ error: "Server error" });
   }
+});
+
+// Middleware to verify JWT on protected routes
+const authenticateToken = (req, res, next) => {
+  const token = req.header('Authorization')?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Access denied' });
+  jwt.verify(token, 'your-secret-key', (err, user) => {
+    if (err) return res.status(403).json({ error: 'Invalid token' });
+    req.user = user;
+    next();
+  });
+};
+
+// Example protected route
+app.get('/api/protected', authenticateToken, (req, res) => {
+  res.json({ message: 'Protected data', userId: req.user.userId });
 });
 
 // Serve static files
